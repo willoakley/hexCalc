@@ -1,0 +1,93 @@
+<html>
+    <head>
+        <title>Hex Calc</title>
+        <link rel="stylesheet" href="styles.css">
+
+        <!-- as I'm not hosting this anywhere I can't use the modules features of ES6+ -->
+        <script src="hex.js"></script>
+        <script src="grid.js"></script>
+        <script src="canvasHelper.js"></script>        
+        <script>
+            function calculate() {
+                var inputs = document.forms[0];
+                var options  = {};
+                options[inputs.measurementType.value] = inputs.measurementValue.value * 1.0;
+    
+                var hex = new Hex(options);
+                var grid = new Grid(hex, inputs.across.value * 1, inputs.down.value * 1, inputs.offsetLeft.value * 1.0, inputs.offsetTop.value * 1.0, inputs.includeTrailingEvenColumnHex.checked);
+                
+                // text rendered output
+                var outputElement = document.getElementById("textOut");
+                outputElement.innerHTML = 'grid:' + JSON.stringify(grid, null, 4);
+
+                // basic hex measurements rendering
+                renderHexDimensions(hex);
+
+                // Figure out scalling
+                var boundarySelected = inputs.boundarySelected.checked;
+                var boundary = boundarySelected ? { width: inputs.boundaryWidth.value * 1.0, height: inputs.boundaryHeight.value * 1.0 } : { width: 0.0, height: 0.0 };
+                var compoundSize = { width: Math.max(grid.size.width, boundary.width), height: Math.max(boundary.height, grid.size.height) };
+
+                var xScale = 690 / compoundSize.width;
+                var yScale = 690 / compoundSize.height;
+                var scale = Math.min(xScale, yScale);
+
+                // show grid scalled to fit the canvas
+                renderGrid(grid, boundarySelected ? boundary : null, scale);
+            }
+        </script>
+    </head>
+    <body onload="calculate();">
+        <h2>Hex Grid Calculator</h2>
+        <form>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Calculate hexagon by</td>
+                        <td>
+                            <select name="measurementType">
+                                <option value="sideLength" selected="selected">Side Length</option>
+                                <option value="height">Height</option>
+                                <option value="width">Width</option>
+                                <option value="offsetWidth">Offset Width</option>
+                                <option value="offsetHeight">Offset Height</option>
+                            </select> of 
+                            <input type="number" class="wide" value="4.32" name="measurementValue" min="0.01" step="0.01">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Grid size</td>
+                        <td>
+                            <input type="number" value="3" name="across" min="1" step="1"> across, by <input type="number" value="4" name="down" min="1" step="1"> down.<br/>
+                            <input type="checkbox" name="includeTrailingEvenColumnHex"> Include trailing even column hex
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Grid Offset</td>
+                        <td><input type="number" value="0.20" name="offsetLeft" step="0.01"> x <input type="number" value="0.00" name="offsetTop" step="0.01"></td>
+                    </tr>
+                    <tr>
+                        <td>Boundary <input type="checkbox" name="boundarySelected" checked="checked"></td>
+                        <td><input type="number" value="22.00" name="boundaryWidth" step="0.01"> x <input type="number" value="30.00" name="boundaryHeight" step="0.01"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="button" onclick="calculate();" value="Calculate Hex Details"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        <table>
+            <tbody>
+                <tr>
+                    <td valign="top">
+                        <canvas id="visualOut" width="300" height="250"></canvas>
+                        <pre id="textOut"></pre>
+                    </td valign="top">
+                    <td valign="top">
+                        <canvas id="visualGridOut" width="700" height="700"></canvas>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
