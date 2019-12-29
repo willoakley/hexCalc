@@ -105,12 +105,9 @@ function renderGrid(grid, boundaryRectangle, scale) {
 
     for(var xx = 0; xx < grid.across; xx++) {
         for(var yy = 0; yy < grid.down; yy++) {
-            if (!grid.shouldRenderHexForGridPosition(xx, yy)) {
-                // don't render the trailing hex on even columns
-                continue;
+            if (grid.shouldRenderHexForGridPosition(xx, yy)) {
+                drawLine(ctx, grid.hex.hexPointsAtOffset(grid.offsetForGridPosition(xx, yy)), colours.grey, 1, true);
             }
-
-            drawLine(ctx, grid.hex.hexPointsAtOffset(grid.offsetForGridPosition(xx, yy)), colours.grey, 1, true);
         }
     }
 

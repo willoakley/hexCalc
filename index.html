@@ -35,6 +35,14 @@
                 // show grid scalled to fit the canvas
                 renderGrid(grid, boundarySelected ? boundary : null, scale);
             }
+
+            function inputsChanged(changedElement) {
+                if (changedElement.type == "number" && isNaN(parseFloat(changedElement.value))) {
+                    return;
+                }
+
+                calculate();
+            }
         </script>
     </head>
     <body onload="calculate();">
@@ -45,30 +53,30 @@
                     <tr>
                         <td>Calculate hexagon by</td>
                         <td>
-                            <select name="measurementType">
+                            <select name="measurementType" onchange="inputsChanged(this);">
                                 <option value="sideLength" selected="selected">Side Length</option>
                                 <option value="height">Height</option>
                                 <option value="width">Width</option>
                                 <option value="offsetWidth">Offset Width</option>
                                 <option value="offsetHeight">Offset Height</option>
                             </select> of 
-                            <input type="number" class="wide" value="4.32" name="measurementValue" min="0.01" step="0.01">
+                            <input type="number" class="wide" value="4.32" name="measurementValue" min="0.01" step="0.01" oninput="inputsChanged(this);">
                         </td>
                     </tr>
                     <tr>
                         <td>Grid size</td>
                         <td>
-                            <input type="number" value="3" name="across" min="1" step="1"> across, by <input type="number" value="4" name="down" min="1" step="1"> down.<br/>
+                            <input type="number" value="3" name="across" min="1" step="1" oninput="inputsChanged(this);"> across, by <input type="number" value="4" name="down" min="1" step="1" oninput="inputsChanged(this);"> down.<br/>
                             <input type="checkbox" name="includeTrailingEvenColumnHex"> Include trailing even column hex
                         </td>
                     </tr>
                     <tr>
                         <td>Grid Offset</td>
-                        <td><input type="number" value="0.20" name="offsetLeft" step="0.01"> x <input type="number" value="0.00" name="offsetTop" step="0.01"></td>
+                        <td><input type="number" value="0.20" name="offsetLeft" step="0.01" oninput="inputsChanged(this);"> x <input type="number" value="0.00" name="offsetTop" step="0.01" oninput="inputsChanged(this);"></td>
                     </tr>
                     <tr>
-                        <td>Boundary <input type="checkbox" name="boundarySelected" checked="checked"></td>
-                        <td><input type="number" value="22.00" name="boundaryWidth" step="0.01"> x <input type="number" value="30.00" name="boundaryHeight" step="0.01"></td>
+                        <td>Boundary <input type="checkbox" name="boundarySelected" checked="checked" onchange="inputsChanged(this);"></td>
+                        <td><input type="number" value="22.00" name="boundaryWidth" step="0.01" oninput="inputsChanged(this);"> x <input type="number" value="30.00" name="boundaryHeight" step="0.01" oninput="inputsChanged(this);"></td>
                     </tr>
                     <tr>
                         <td><input type="button" onclick="calculate();" value="Calculate Hex Details"></td>
