@@ -9,6 +9,8 @@ colours = Object.freeze({
     indigo: "#4B0082"
 });
 
+formatter = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 4 });
+
 function drawLine(ctx, points, colour = colours.black, thickness = 1, closePath = false) {
     ctx.beginPath();
 
@@ -39,6 +41,10 @@ function renderText(ctx, position, text, colour) {
     ctx.fillText(text, position.x, position.y);
 }
 
+function formatNumber(number) {
+    return formatter.format(number);
+}
+
 function renderHexDimensions(actualHex) {
     var offset = 20.0;
     var pad = 6.0;
@@ -53,15 +59,15 @@ function renderHexDimensions(actualHex) {
 
     // sideLength
     drawLine(ctx, [hexPoints[0], hexPoints[1]], colours.red, 3);
-    renderText(ctx, { x: hexPoints[1].x + pad, y: hexPoints[1].y }, "Side: " + actualHex.side, colours.red);
+    renderText(ctx, { x: hexPoints[1].x + pad, y: hexPoints[1].y }, "Side: " + formatNumber(actualHex.side), colours.red);
 
     // width
     drawLine(ctx, [hexPoints[1], hexPoints[4]], colours.green, 3);
-    renderText(ctx, { x: hexPoints[4].x + pad * 6, y: hexPoints[4].y - pad * 6 }, "Width: " + actualHex.width, colours.green);
+    renderText(ctx, { x: hexPoints[4].x + pad * 6, y: hexPoints[4].y - pad * 6 }, "Width: " + formatNumber(actualHex.width), colours.green);
 
     // height
     drawLine(ctx, [hexPoints[0], hexPoints[4]], colours.blue, 3);
-    renderText(ctx, { x: hexPoints[4].x + pad, y: hexPoints[4].y + pad * 2 }, "Height: " + actualHex.height, colours.blue);
+    renderText(ctx, { x: hexPoints[4].x + pad, y: hexPoints[4].y + pad * 2 }, "Height: " + formatNumber(actualHex.height), colours.blue);
 
     // section width
     var sectionWidthPoints = [
@@ -69,7 +75,7 @@ function renderHexDimensions(actualHex) {
         { x: hexPoints[2].x - hex.sectionWidth, y: hexPoints[2].y }
     ];
     drawLine(ctx, sectionWidthPoints, colours.pink, 3);
-    renderText(ctx, { x: hexPoints[2].x + pad, y: hexPoints[2].y }, "s Width: " + actualHex.sectionWidth, colours.pink);
+    renderText(ctx, { x: hexPoints[2].x + pad, y: hexPoints[2].y }, "s Width: " + formatNumber(actualHex.sectionWidth), colours.pink);
 
     // section height / r
     var sectionWidthPoints = [
@@ -77,7 +83,7 @@ function renderHexDimensions(actualHex) {
         { x: hexPoints[3].x, y: hexPoints[3].y - hex.sectionHeight }
     ];
     drawLine(ctx, sectionWidthPoints, colours.orange, 3);
-    renderText(ctx, { x: hexPoints[3].x + pad * 4, y: hexPoints[3].y - pad * 4 }, "s Height (r): " + actualHex.r, colours.orange);
+    renderText(ctx, { x: hexPoints[3].x + pad * 4, y: hexPoints[3].y - pad * 4 }, "s Height (r): " + formatNumber(actualHex.r), colours.orange);
 
     // h
     var hPoints = [
@@ -85,7 +91,7 @@ function renderHexDimensions(actualHex) {
         { x: hexPoints[3].x + hex.h,    y: hexPoints[3].y }
     ];
     drawLine(ctx, hPoints, colours.indigo, 3);
-    renderText(ctx, { x: hexPoints[3].x + hex.h + pad, y: hexPoints[3].y }, "(h): " + actualHex.h, colours.indigo);
+    renderText(ctx, { x: hexPoints[3].x + hex.h + pad, y: hexPoints[3].y }, "(h): " + formatNumber(actualHex.h), colours.indigo);
 }
 
 function renderGrid(grid, boundaryRectangle, scale) {
